@@ -1,7 +1,6 @@
-import app from './app'
 import dotenv from 'dotenv'
-
-dotenv.config()
+dotenv.config() // Load environment variables before anything else
+import app from './app'
 
 const PORT = process.env.PORT || 5000
 

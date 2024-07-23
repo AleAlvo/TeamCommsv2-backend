@@ -12,6 +12,12 @@ export const createEvent = async (req: Request, res: Response) => {
     subteams,
   }: Partial<EventData> = req.body
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  console.log('Authenticated User:', user)
+
   const { data, error } = await supabase
     .from('events')
     .insert([{ team_id, title, description, event_date, subteams }])
