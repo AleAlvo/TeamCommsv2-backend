@@ -1,6 +1,7 @@
 import express from 'express'
 import authRoutes from './routes/auth'
 import homeRoutes from './routes/home'
+import eventRoutes from './routes/event'
 import dotenv from 'dotenv'
 import { supabase } from './supabaseClient'
 
@@ -12,6 +13,7 @@ app.use(express.json())
 
 app.use('/api/auth', authRoutes)
 app.use('/home', homeRoutes)
+app.use('/api/events', eventRoutes)
 
 // In this example, we have a simple Express server that uses the Supabase client to interact with a database table.
 // The server listens on the specified port and has a route that retrieves all records from a table.
