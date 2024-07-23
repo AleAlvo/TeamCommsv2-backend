@@ -1,9 +1,9 @@
-import { UserData } from '../models/user'
+import { User } from '../models/db.models'
 
 declare global {
   namespace Express {
     interface Request {
-      user?: UserData // Assuming `user` is of type `User`, adjust as necessary
+      user?: User // Assuming `user` is of type `User`, adjust as necessary
     }
   }
 }

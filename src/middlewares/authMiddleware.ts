@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
-import { supabase } from '../supabaseClient'
+import { createClient } from '@supabase/supabase-js'
 
-// authMiddleware function: Asynchronously checks if the user is authenticated
+const supabaseUrl = process.env.SUPABASE_URL!
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 export const authMiddleware = async (
   req: Request,
   res: Response,
@@ -9,22 +12,28 @@ export const authMiddleware = async (
 ) => {
   const token = req.headers.authorization?.split(' ')[1]
 
-  // If no token is provided, send a 401 response
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' })
   }
 
-  // Attempt to retrieve the user data using the provided token
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser(token)
+  const { data, error } = await supabase.auth.getUser(token)
 
-  // If an error occurs during user retrieval, send a 401 response
-  if (error) {
+  if (error || !data.user) {
     return res.status(401).json({ error: 'Unauthorized' })
   }
 
-  req.user = user
+  // Fetch user details from the database
+  const { data: user, error: userError } = await supabase
+    .from('Users')
+    .select('*')
+    .eq('id', data.user.id)
+    .single()
+
+  if (userError || !user) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
+  req.user = user // Attach the user object to req
+
   next()
 }
