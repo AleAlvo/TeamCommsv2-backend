@@ -13,8 +13,8 @@ const router = express.Router()
 router.use(authMiddleware)
 
 // Middleware to ensure user has the appropriate role
-// Only admin and coach can use these routes
-router.use(roleMiddleware(['admin', 'coach']))
+// Only superadmin, admin and coach can use these routes
+router.use(roleMiddleware(['superadmin', 'admin', 'coach']))
 
 router.post('/events', createEvent) // Create event
 router.put('/events/:id', updateEvent) // Update event
